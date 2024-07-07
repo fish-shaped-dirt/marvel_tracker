@@ -10,14 +10,19 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@tauri-apps/api": "^1.5.6",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "svgo": "^3.3.2",
+    "tauri-plugin-sql-api": "github:tauri-apps/tauri-plugin-sql#v1",
     "vue": "^3.3.4",
-    "@tauri-apps/api": "^1"
+    "vue-router": "^4.4.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^5.0.5",
-    "typescript": "^5.2.2",
+    "@tauri-apps/cli": "^1",
+    "@types/node": "^20.14.9",
+    "globals": "^15.7.0",
+    "typescript": "^5.5.3",
     "vite": "^5.3.1",
-    "vue-tsc": "^2.0.22",
-    "@tauri-apps/cli": "^1"
+    "vue-tsc": "^2.0.24"
   }
 }
