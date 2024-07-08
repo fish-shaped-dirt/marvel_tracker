@@ -8,6 +8,7 @@ html {
   --color2: #191925;
   --color22: #222234;
   --color3: #f6f6f7;
+  --color4: #5bc088;
 }
 
 body {
@@ -56,7 +57,7 @@ a {
 
     padding-right: 12px;
 
-    background-color: #ff3c46;
+    background-color: var(--color1);
     color: var(--color3);
 
     display: flex;

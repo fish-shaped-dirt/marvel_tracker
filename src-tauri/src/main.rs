@@ -9,16 +9,21 @@ use tauri::{AppHandle, Manager, State};
 
 #[tauri::command]
 fn save_api(app_handle: AppHandle, key1: &str, key2: &str) {
-    // Should handle errors instead of unwrapping here
     app_handle
         .db(|db| database::push_api(key1, key2, db))
         .unwrap();
+}
 
-    // let items = app_handle.db(|db| database::get_all(db)).unwrap();
+#[tauri::command]
+fn get_api(app_handle: AppHandle) -> Result<(String, String), String> {
+    let keys_result = app_handle.db(|db| database::get_keys(db));
 
-    // let items_string = items.join(" | ");
-
-    // println!("Your name log: {}", items_string)
+    match keys_result {
+        Ok((key1, key2)) => Ok((key1, key2)),
+        Err(err) => {
+            Err(format!("Failed to get keys from the database: {:?}", err))
+        }
+    }
 }
 
 fn main() {
@@ -26,13 +31,13 @@ fn main() {
         .manage(AppState {
             db: Default::default(),
         })
-        .invoke_handler(tauri::generate_handler![save_api])
+        .invoke_handler(tauri::generate_handler![save_api, get_api])
         .setup(|app| {
             let handle = app.handle();
 
             let app_state: State<AppState> = handle.state();
-            let db =
-                database::initialize_database(&handle).expect("Database initialize should succeed");
+            let db = database::initialize_database(&handle)
+                .expect("Database initialize should succeed");
             *app_state.db.lock().unwrap() = Some(db);
 
             Ok(())

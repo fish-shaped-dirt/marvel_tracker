@@ -90,6 +90,18 @@ pub fn push_api(
     Ok(())
 }
 
+pub fn get_keys(db: &Connection) -> Result<(String, String), rusqlite::Error> {
+    let mut statement = db.prepare("SELECT client_key, secret_key FROM api LIMIT 1")?;
+    let mut keys = statement.query([])?;
+    if let Some(row) = keys.next()? {
+        let client_key: String = row.get(0)?;
+        let secret_key: String = row.get(1)?;
+        Ok((client_key, secret_key))
+    } else {
+        Err(rusqlite::Error::QueryReturnedNoRows)
+    }
+}
+
 pub fn add_item(title: &str, db: &Connection) -> Result<(), rusqlite::Error> {
     let mut statement = db.prepare("INSERT INTO items (title) VALUES (@title)")?;
     statement.execute(named_params! { "@title": title })?;

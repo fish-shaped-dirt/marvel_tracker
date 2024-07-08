@@ -1,4 +1,5 @@
 <script>
+import { message } from "@tauri-apps/api/dialog";
 import { invoke } from "@tauri-apps/api/tauri";
 
 export default {
@@ -10,11 +11,26 @@ export default {
   },
   methods: {
     async save_api2() {
-      invoke("save_api", {
+      await invoke("save_api", {
         key1: this.client_key,
         key2: this.secret_key,
       });
+      this.checkKeys();
     },
+    async checkKeys() {
+      try {
+        let response = await invoke("get_api");
+        document.getElementById("send").className = "ok";
+        document.getElementById("send_icon").innerHTML = "check_circle";
+        this.client_key = response[0];
+        this.secret_key = response[1];
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  },
+  mounted() {
+    this.checkKeys();
   },
 };
 </script>
@@ -25,8 +41,8 @@ export default {
   <form class="input_field" @submit.prevent="save_api2">
     <input placeholder="client key" autocomplete="off" v-model="client_key" />
     <input placeholder="secret key" autocomplete="off" v-model="secret_key" />
-    <button type="submit">
-      <span class="material-symbols-rounded">save</span>
+    <button type="submit" id="send">
+      <span class="material-symbols-rounded" id="send_icon">save</span>
     </button>
   </form>
 </template>
